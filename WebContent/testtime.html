@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jquery-countdown plugin test</title>
+<link href="./css/timestyle.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="./js/jquery.min.js"></script>
+<script type="text/javascript" src="./js/jquery.countdown.js"></script>    
+<script type="text/javascript">
+
+var date1 = new Date();
+var date2 = new Date('2015/06/01 15:20:11')
+ 
+var s1 = date1.getTime()
+var s2 = date2.getTime();
+var total = (s2 - s1)/1000;
+ 
+ 
+var day = parseInt(total / (24*60*60));//计算整数天数
+
+var afterDay = total - day*24*60*60;//取得算出天数后剩余的秒数
+var hour = parseInt(afterDay/(60*60));//计算整数小时数
+
+if(hour<10){
+	   hour = "0"+hour;
+	}
+var afterHour = total - day*24*60*60 - hour*60*60;//取得算出小时数后剩余的秒数
+var mins = parseInt(afterHour/60);//计算整数分
+if(mins<10){
+	   mins = "0"+mins;
+	}
+var afterMin = total - day*24*60*60 - hour*60*60 - mins*60;//取得算出分后剩余的秒数
+
+
+
+$(function(){
+	$(".digits").countdown({
+		image: "images/digits.png",
+		format: "hh:mm:ss",
+		startTime:hour+":"+mins+":00"
+	});
+});
+</script>
+
+</head>
+<body style="width:304px;">
+
+<div id="holder" style=" padding-left:10px;">
+<div style="text-align:left; padding-bottom:30px;"><p style="color:#ffffff;">报名倒计时：</p></div>
+	<div class="digits"></div>
+</div>
+
+
+
+
+</body>
+</html>

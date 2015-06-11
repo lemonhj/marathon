@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">  
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>跑者</title>  
+    <link rel="stylesheet" type="text/css" href="./themes/metro/easyui.css">  
+    <link rel="stylesheet" type="text/css" href="./themes/mobile.css">  
+    <link rel="stylesheet" type="text/css" href="./themes/icon.css">  
+    <script type="text/javascript" src="./jquery.min.js"></script>  
+    <script type="text/javascript" src="./jquery.easyui.min.js"></script> 
+    <script type="text/javascript" src="./jquery.easyui.mobile.js"></script> 
+</head>
+<body>
+	<style scoped>
+		#list .image{
+			width: 32px;
+			height: 32px;
+			border: 0;
+			margin-right: 5px;
+			float: left;
+		}
+		#list .header{
+			font-size: 16px;
+			font-weight: bold;
+		}
+		#list .content{
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+		
+		.m-list li>a:hover {
+  background: #26282E;
+  color: #444;
+}
+  
+	</style>
+	<div class="easyui-navpanel" style=" background-color:#26282E;">
+		<header style="background-color:#26282E; border-color:#141617;">
+			<div class="m-toolbar">
+				 <div class="m-title" style="color:#FFF;">俱乐部</div>
+			</div>
+		</header>
+		<ul id="list" class="m-list" style="background-color:#1E2026;">
+			<li style="border-color:#141617;"><a href="javascript:void(0)" onclick="openit(this)" style=" text-decoration:none;">
+				<img style="border-color:#141617" class="image" src=""/>
+				<div class="header"><font color="#FEFEFE" size="3">贵阳地平线跑团</font></div>
+				<div class="content"><font color="#FEFEFE">806人</font></div></a>
+			</li>
+			<li style="border-color:#141617;"><a href="javascript:void(0)" onclick="openit(this)" style=" text-decoration:none;">
+				<img class="image" src=""/>
+				<div class="header"><font color="#FEFEFE">贵阳跑缘俱乐部</font></div>
+				<div class="content"><font color="#FEFEFE"></font></div></a>
+			</li>
+			<li style="border-color:#141617;"><a href="javascript:void(0)" onclick="openit(this)" style=" text-decoration:none;">
+				<img class="image" src=""/>
+				<div class="header"><font color="#FEFEFE">成都跑客俱乐部</font></div>
+				<div class="content"><font color="#FEFEFE"></font></div></a>
+			</li>
+		</ul>
+        <footer style="border:0 none; background-color:#2B2E32;">
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%; background-color:#2B2E32;" id="myfoot">
+                <a style="text-decoration:none;" href="index.html" class="easyui-linkbutton" data-options="iconAlign:'top',plain:true"><img src="./images/bt2.png" style="height:4em; border:0 none;" /></a>
+                <a style="text-decoration:none;background-color: #1D1F25;" href="list.html" class="easyui-linkbutton" data-options="iconAlign:'top',plain:true"><img src="./images/bt3.png" style="height:4em;  border:0 none;" /></a>
+                <a style="text-decoration:none" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconAlign:'top',plain:true"><img src="./images/bt4.png" style="height:4em;  border:0 none;" /></a>
+                <a style="text-decoration:none" href="login.html" class="easyui-linkbutton" data-options="iconAlign:'top',plain:true"><img src="./images/bt1.png" style="height:4em;  border:0 none;" /></a>
+            </div>
+        </footer>
+	</div>
+
+    
+    
+    <div id="p2" class="easyui-navpanel"  style=" background-color:#26282E;">
+		<header style=" background-color:#26282E; color:#FFF;">
+			<div class="m-toolbar">
+				<span id="p2-title" class="m-title">Detail</span>
+                <div class="m-left" style=" background-color:#26282E; border:0 none;">
+                    <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" style="width:50px;color:#FFF; border:0 none;" onclick="$.mobile.back()"></a>
+                </div>
+			</div>
+		</header>
+        
+        <div style="background-image:url(images/bmimg.jpg); background-size:cover; height:250px;"></div>
+         <div style="margin:10px auto;  padding-top:18px; background-image:url(./images/reg.png); width:320px; height:34px;"><a style="color:#FFF;  padding:18px 120px; font-size:18px;">申请加入</a></div>
+	</div>
+	<script type="text/javascript">
+		function openit(target){
+			var text = $(target).text();
+			$('#p2-title').html(text);
+			$.mobile.go('#p2');
+		}
+	</script>
+</body>	
+</html>

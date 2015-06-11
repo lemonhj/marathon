@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="./themes/metro/easyui.css">
+    <link rel="stylesheet" type="text/css" href="./themes/mobile.css">
+    <link rel="stylesheet" type="text/css" href="./themes/icon.css">
+	<script type="text/javascript" src="./jquery.min.js"></script>
+    <script type="text/javascript" src="./jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="./jquery.easyui.mobile.js"></script>
+    <script>
+	    
+		$(document).keypress(function(e){
+			   if(e.keyCode == 13){
+				     login();
+				   }
+			});
+		
+ 
+		
+		function register(){
+			  window.location.href="register.html";
+			}
+			
+	function login(){
+
+		
+	    if(formSerach.tel.value.length!=11){    
+				document.getElementById("userid").style.border = "1px solid #F00";
+				return false;
+			  }else{
+				  document.getElementById("userid").style.border = "";
+				  }
+				  
+		   if(formSerach.pwd.value.length<6){
+			   document.getElementById("pwdid").style.border = "1px solid #F00";
+				return false;
+			   }else{
+				   document.getElementById("pwdid").style.border = "";
+			   }
+			   		  
+	      $.ajax({    
+           url:'http://192.168.31.132:3000/action/user_login',
+           type:"POST",       
+		    data:{
+			   tel:formSerach.tel.value,
+			   pwd:formSerach.pwd.value
+			   },          
+            success: function (data,statusText,jqXHR) { 
+		     
+			 var token = jqXHR.getResponseHeader("Token");
+			  document.cookie = token;
+            //var str = JSON.stringify(data);
+                  if(data.code == 200){
+					    window.location.href = "index.html";  					 
+					 }else{
+						 alert('登录失败！');
+				    }
+ 
+           }
+        }); 
+	   }
+	   
+ 
+    </script>
+   
+<title>跑者</title>
+</head>
+
+<body style="background-image:url(./images/loginbg.jpg);">
+ <!--首页
+<div class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar">
+                <div class="m-title">首页</div>
+            </div>
+        </header>
+        <div style="margin:50px 0 0;text-align:center">
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="width:100px;height:30px" onclick="$.mobile.go('#p2')">登陆</a>
+        </div>
+	</div>-->
+    
+    <!--登陆页面-->
+    <div id="p2" class="easyui-navpanel" style="background-image:url(./images/loginbg.jpg);">
+        <header style=" background-image:url(./images/loginbg.jpg);">
+            <div class="m-toolbar">
+                <div class="m-title" style="color:#FFF;">用户登陆</div>
+                <div class="m-left">
+                    <a href="#" class="easyui-linkbutton m-back" data-options="plain:true,outline:true,back:true" style="width:50px;border:0 none;"></a>
+                </div>
+            </div>
+        </header>
+        
+        <div style="text-align:center; padding-top:40px; padding-bottom:40px;">
+           <img src="./images/logow.png" width="250" height="80"/>     
+        </div>
+        
+        <div style=" padding-bottom:10px;">
+        <form name="formSerach">
+            <table cellspacing="0" cellpadding="0">
+            <tr>
+                <td style="padding:0px 20px; background-image:url(./images/bgTD.png); background-repeat:repeat;"><img src="./images/user.png" width="21" height="24"/></td>
+                <td id="userid" style="background-image:url(./images/inputBg.png); background-repeat:repeat;">
+				<input id="usertext" class="easyui-textbox" name="tel" value="18091580581" prompt="手机号码"></td></tr>
+               <tr>
+                 <td><div style="height:5px;"></div></td><td><div style="height:5px;"></div></td>
+               </tr>
+               <tr>
+                <td style=" padding:0px 20px;background-image:url(./images/bgTD.png); background-repeat:repeat;"><img src="./images/psw.png" width="21" height="24"/></td>
+                <td id="pwdid">
+				<input id="passtext" class="easyui-textbox" type="password" name="pwd" prompt="登陆密码"></td></tr>   
+            </table>
+            
+            </form>    
+        </div>
+        
+        <div id="foot" style="border:0 none; position:fixed; bottom:0px; text-align:center;">
+        <div style="margin:10px auto; padding-top:18px; background-image:url(./images/logonbt.png); width:320px; height:34px;"><a onClick="login()" style="color:#FFF;  padding:18px 140px; font-size:18px;">登录</a></div>
+        
+       <div style="margin:10px auto;  padding-top:18px; background-image:url(./images/reg.png); width:320px; height:34px;"><a onClick="register()" style="color:#FFF;  padding:18px 140px; font-size:18px;">注册</a></div>
+       <div style="margin:10px auto; padding-bottom:20px; padding-top:5px; text-align:center;"><a style="color:#FFF; font-size:18px; margin-left:10px;">忘记密码？</a></div>
+       </div>
+         <script>
+          document.getElementById("usertext").style.width = ($(window).width()-64)+"px";
+		   document.getElementById("passtext").style.width = ($(window).width()-64)+"px";
+		   document.getElementById("foot").style.width = ($(window).width())+"px";
+        </script>
+       </div>
+
+</body>
+</html>

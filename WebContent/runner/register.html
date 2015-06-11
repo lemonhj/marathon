@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">  
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>注册页面</title>
+    <link rel="stylesheet" type="text/css" href="./themes/metro/easyui.css">  
+    <link rel="stylesheet" type="text/css" href="./themes/mobile.css">  
+    <link rel="stylesheet" type="text/css" href="./themes/icon.css">  
+    <script type="text/javascript" src="./jquery.min.js"></script>  
+    <script type="text/javascript" src="./jquery.easyui.min.js"></script> 
+    <script type="text/javascript" src="./jquery.easyui.mobile.js"></script>
+    <script>
+      function reg(){
+	   
+	      if(formSerach.tel.value.length!=11){
+			    
+				document.getElementById("userid").style.border = "1px solid #F00"; 
+				return false;
+			  }else{
+				  document.getElementById("userid").style.border = ""; 
+				  }
+				  
+		   if(formSerach.pwd.value.length<6){
+			   document.getElementById("pwdid").style.border = "1px solid #F00"; 
+				return false;
+			   }else{
+				   document.getElementById("pwdid").style.border = ""; 
+				   }		  
+	      showLoader();
+	      $.ajax({    
+           url:'../users',
+           type:"POST",       
+		    data:{
+			   tel:formSerach.tel.value,
+			   pwd:formSerach.pwd.value
+			   },             
+           success:function(json){ 
+            var str = JSON.stringify(json); 
+                 if(json.code == 200){
+					    window.location.href = "login.html";					 
+					 }else{
+						 alert("注册失败!");						 
+						 }
+				 hideLoader();  
+           },error:function(a,b,c){     
+				  hideLoader(); 
+			   }
+        });    
+
+		  }
+    </script>
+   
+</head>
+<body>
+	<div class="easyui-navpanel" style=" background-color:#26282E; background-image:url(./images/loginbg.jpg);">
+		<header style="background-color:#26282E; border-color:#FFF;background-image:url(./images/loginbg.jpg);">
+			<div class="m-toolbar">
+				 <div class="m-title" style="color:#FFF;">用户注册</div>
+                 <div class="m-left">
+                    <a href="index.html" class="easyui-linkbutton m-back" data-options="plain:true,outline:true,back:true" style="border:0 none;"></a>
+                </div>
+			</div>
+		</header>
+        
+         <div style="text-align:center; padding-top:40px; padding-bottom:40px;">
+           <img src="./images/logow.png" width="250" height="80"/>     
+        </div>
+        
+        <div style=" padding-top:50px; padding-bottom:10px;">
+        <form name="formSerach">
+            <table cellspacing="0" cellpadding="0">
+            <tr>
+                <td style="padding:0px 20px; background-image:url(./images/bgTD.png); background-repeat:repeat;"><img src="./images/user.png" width="21" height="24"/></td>
+                <td id="userid" style="background-image:url(./images/inputBg.png); background-repeat:repeat;">
+				<input id="usertext" class="easyui-textbox" name="tel" prompt="手机号码"></td></tr>
+                <tr>
+                 <td><div style="height:15px;"></div></td><td><div style="height:15px;"></div></td>
+               </tr>
+               <!--<tr>
+                <td style=" padding:0px 20px;background-image:url(./images/bgTD.png); background-repeat:repeat;"><img src="./images/psw.png" width="21" height="24"/></td><td>
+				<input id="vercodetext" class="easyui-textbox" type="text" prompt="输入验证码"><a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px; margin-left:20px; padding:3px 0px;">获取验证码</a></td></tr>  -->
+               <tr>
+                 <td><div style="height:15px;"></div></td><td><div style="height:15px;"></div></td>
+               </tr>
+               <tr>
+                <td style=" padding:0px 20px;background-image:url(./images/bgTD.png); background-repeat:repeat;"><img src="./images/psw.png" width="21" height="24"/></td>
+                <td id="pwdid">
+				<input id="passtext" class="easyui-textbox" name="pwd" type="password" prompt="登陆密码"></td></tr>   
+            </table>
+            
+            </form>    
+        </div>
+        
+         <div id="foot" style="border:0 none; position:fixed; bottom:0px; text-align:center;">
+        <div style="margin:0px auto; margin-bottom:30px;  padding-top:18px; background-image:url(./images/reg.png); width:320px; height:34px;"><a onClick="reg()" style="color:#FFF;   padding:18px 140px; font-size:18px;">注册</a></div>
+        </div>
+        
+	<script>
+          document.getElementById("usertext").style.width = ($(window).width()-64)+"px";
+		   document.getElementById("passtext").style.width = ($(window).width()-64)+"px";
+		    document.getElementById("foot").style.width = ($(window).width())+"px";
+        </script>
+        
+           
+	</div>
+
+</body>	
+</html>
+

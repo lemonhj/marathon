@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <link rel="stylesheet" type="text/css" href="./easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="./easyui/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="./easyui/demo.css">
+	<script type="text/javascript" src="./easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="./easyui/jquery.easyui.min.js"></script> 
+    <title>跑者</title>
+<script>
+
+     $.ajax({
+		   url:'../orders/paid', 
+           type:"GET",            
+           success:function(json){ 
+		       initdata(json.data);
+		   }
+		 });
+
+function initdata(json){
+	  $('#querytable').datagrid({   
+      data:json,   
+      columns:[[   
+          {field:'athleteNum',title:'参赛号',width:100,formatter:function(value,rowData,rowIndex){
+		return  "0"+value;
+			   }}, 
+		   {field:'realName',title:'真实姓名',width:120},
+		   {field:'nikeName',title:'网名',width:120},
+		   {field:'tel',title:'联系电话',width:200},
+		   {field:'cardID',title:'身份证号',width:200},
+		   {field:'orderStatus',title:'支付状态',width:100,formatter:function(value,rowData,rowIndex){
+			      if(value){
+					    return "<font color=green>已支付</font>";
+					  }else{
+						   return "<font color=red>未支付</font>";
+						  }
+			   }},
+			   {field:'emergencyContactPerson',title:'紧急联系人',width:120,formatter:function(value,rowData,rowIndex){
+				      if(value){
+						    return value;
+						  }else{
+							  return "无";
+							  }
+				   }},
+				    {field:'emergencyTel',title:'紧急联系人电话',width:200,formatter:function(value,rowData,rowIndex){
+				      if(value){
+						    return value;
+						  }else{
+							  return "无";
+							  }
+				   }},
+				   {field:'orderNum',title:'订单号',width:200}
+			   
+     ]]   
+ });  
+	
+	}
+</script>
+
+</head>
+
+<body>
+<body>
+	<h2>报名查询</h2>
+	<p>参赛项目：半程马拉松</p>
+    <p>报名费：20元</p>
+	<div style="margin:20px 0;"></div>
+	
+	<table id="querytable"></table>
+ 
+</body>
+</body>
+</html>
+

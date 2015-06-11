@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+<script src="js/general.js" type="text/javascript"></script>
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.4.5.min.js" type="text/javascript"></script> 
+<title>跑团</title>
+
+<script>
+
+  var paramUrl = $.mobile.path.parseUrl(location.search); 
+    var params = getUrlParam(decodeURIComponent(paramUrl.search));
+	
+	$(document).ready(function(e) {
+        var str = params['url'];
+
+	
+	var imgsrc = "http://barcode.tec-it.com/barcode.ashx?code=QRCode&modulewidth=fit&data="+str+"&dpi=96";
+	
+	  document.getElementById("imgtow").innerHTML="<img width=250 src='"+imgsrc+"'/>";
+	  
+	  setInterval("isPaySuccess()",5000); 
+    });
+
+
+
+    function isPaySuccess(){
+		   
+		   $.ajax({    
+           url:'../orders/'+params["orderid"],   
+           type:"GET",
+		    timeout:4000,             
+           success:function(json){ 
+		    if(json.data){ 
+			    if(json.data.orderStatus){
+					  
+					  window.location.href = "query.html?pid="+json.data.cardID;
+					
+					}
+			
+			}
+		   }
+		   
+		   });
+		
+		}
+
+function post(URL, PARAMS) { 
+var temp = document.createElement("form"); 
+temp.action = URL; 
+temp.method = "post"; 
+temp.style.display = "none"; 
+for (var x in PARAMS) { 
+var opt = document.createElement("textarea"); 
+opt.name = x; 
+opt.value = PARAMS[x]; 
+temp.appendChild(opt); 
+} 
+document.body.appendChild(temp); 
+temp.submit(); 
+return temp; 
+}
+
+
+
+function payzf(){
+	   
+	   var params = {"WIDout_trade_no":params["orderid"]};
+	   post("http://112.74.109.66:8080/alipay/alipayapi.jsp",params);
+	
+	}
+
+	
+
+
+</script>
+</head>
+
+<body>
+
+<div data-role="page">
+  <div data-role="header">
+  <script>
+  document.write("<a href='nexttwo.html?orderid="+params['orderid']+"' data-icon='arrow-l' rel='external'>返回</a>");
+  </script>
+  <h1>民间马拉松报名</h1>
+  </div>
+
+  <div data-role="content">
+
+     <ul data-role="listview" data-inset="true">
+            <script>
+            var strs = "报名订单号:"+params["orderid"];
+			 var name = "报名人:" + params["name"];
+			document.write("<li style='white-space:pre-wrap; text-align:center; width:"+($(window).width())+";'>"+strs+"</li>");
+			document.write("<li style='white-space:pre-wrap; text-align:center; width:"+($(window).width())+";'>"+name+"</li>");
+            </script>
+            
+
+          </ul>
+          
+            <ul data-role="listview" data-inset="true">
+             <script>
+            var money = params["moneyshow"];
+	document.write(" <li style='font-size:18px; text-align:center'>报名费:<font size=14 color=red>¥"+money+"</font>元</li>");
+            </script>
+             
+            </ul>
+            
+              <ul data-role="listview" data-inset="true">
+               <!--<li style="font-size:18px;"><a onClick="payzf()" data-icon="arrow-r" data-iconpos="right" >支付宝支付</a></li>-->
+            </ul>
+            
+             <ul data-role="listview" data-inset="true">
+               <li style="font-size:18px; "><a id="wxpay" style="background-color:#0C6; color:#fff;" data-icon="arrow-r" data-iconpos="right" >请用微信扫描下面二维码进行支付</a></li>
+            </ul>
+            <div id="imgtow" style="text-align:center"></div>
+   
+  </div>
+  
+ 
+</div>
+</body>
+</html>

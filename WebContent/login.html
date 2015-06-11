@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.4.5.min.js" type="text/javascript"></script> 
+<title>跑团</title>
+
+<script>
+   function login(){
+	    if(formSerach.tel.value.length!=11){    
+				document.getElementById("telerror").innerHTML = "号码错误"; 
+				return false;
+			  }else{
+				  document.getElementById("telerror").innerHTML = ""; 
+				  }
+				  
+		   if(formSerach.pwd.value.length<6){
+			   document.getElementById("pwderror").innerHTML = "密码长度应大于6位"; 
+				return false;
+			   }else{
+				   document.getElementById("pwderror").innerHTML = ""; 
+				   }		  
+	      showLoader();
+	      $.ajax({    
+           url:'../action/user_login',
+           type:"POST",       
+		    data:{
+			   tel:formSerach.tel.value,
+			   pwd:formSerach.pwd.value
+			   },             
+           success:function(json){ 
+            var str = JSON.stringify(json);
+
+                  if(json.code == 200){
+					    window.location.href = "index1.html?pid="+json.data._id;
+						  					 
+					 }else{
+						 alert('登录失败！');
+						 }
+				 hideLoader();  
+           }
+        }); 
+	   
+	   }
+	   
+	   function showLoader() {  
+    $.mobile.loading('show', {  
+        text: '加载中...', //加载器中显示的文字  
+        textVisible: true, //是否显示文字  
+        theme: 'a',        //加载器主题样式a-e  
+        textonly: false,   //是否只显示文字  
+        html: ""           //要显示的html内容，如图片等  
+    });  
+}  
+  
+
+function hideLoader()  
+{  
+    //隐藏加载器  
+    $.mobile.loading('hide');  
+}  
+</script>
+
+</head>
+
+<body>
+<div data-role="page" id="page1">
+
+	<div data-role="header">
+    <a href="index1.html" data-icon="gear" rel="external">返回</a> 
+        <a href="register.html" data-icon="gear" rel="external">注册</a> 
+        <h1>民间马拉松登陆</h1>
+	</div>
+	<div data-role="content">	
+		  <form method="post" action="" name="formSerach">
+       <div data-role="fieldcontain">
+
+         <section style="padding-bottom:5px;">
+        <label for="personid">电话号码：</label>
+      <input type="text" name="tel" id="tel">
+      <div id="telerror"></div>
+           </section>
+        <section style="padding-bottom:5px;">
+        <label for="personid">个人密码：</label>
+      <input type="password" name="pwd" id="pwd">
+      <div id="pwderror"></div>
+           </section>
+             <section style="padding-bottom:5px;">
+       <a href="#"  onClick="login()" data-role="button" data-corners="false">登陆</a>
+           </section>
+      </div>
+    </form>
+	</div>
+</div>
+</body>
+</html>

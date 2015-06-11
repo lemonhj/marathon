@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>跑者</title>
+     <link rel="stylesheet" type="text/css" href="./themes/metro/easyui.css">
+    <link rel="stylesheet" type="text/css" href="./themes/mobile.css">
+    <link rel="stylesheet" type="text/css" href="./themes/icon.css">
+    <script type="text/javascript" src="./jquery.min.js"></script>
+    <script type="text/javascript" src="./jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="./jquery.easyui.mobile.js"></script>
+    <!--样式-->
+    <style type="text/css">
+        #cot
+        {
+            background-color:#1D1F25;
+        }
+        .tabs-title
+        {
+             color: #4E545E;
+            font-size: 1.5em;
+        }
+        .tabs-justified, .tabs-justified .l-btn, .tabs-justified li a.tabs-inner, .tabs-justified li.tabs-selected a.tabs-inner, .tabs-header-bottom .tabs-justified li.tabs-selected a.tabs-inner, .tabs-header-bottom .tabs-justified li a.tabs-inner
+        {
+            background-color:#1D1F25;
+            border-style: none;
+        }
+        .tabs-header, .tabs-tool
+        {
+            background-color:#1D1F25;
+        }
+        #myfoot a:hover, a:active
+        {
+            background-color:#1D1F25;
+			 border-style: none;
+        }
+        </style>
+    <script type="text/javascript">
+	
+	      $(document).ready(function(e) {
+           addmygroup();
+		    addAllgroup();
+        });
+		
+		function addmygroup(){
+			var items = document.getElementById("myrungroup");
+			var str = "";
+			
+			$.ajax({
+				  url:'http://192.168.31.162:3000/activitys/',
+				  type:'GET',
+				  success: function(json){
+					      if(json.code==200){
+							     if(json.data.length){
+									    for(var i=0;i<json.data.length;i++){
+											  str+="<div style='text-align:center; background-image:url(./images/bmimg.jpg); background-size:cover; height:250px;'>"
+				        +"<div style='color:#FFF; padding-top:50px;'><h1>"+json.data[i].title+"</h1></div>"
+						 +"<div style='background-image:url(./images/btnbg.png); margin:0 auto; background-repeat: no-repeat; width:100px; height:35px; line-height:35px; font-size:18px; color:#FFF;'><a style='color:#FFF;text-decoration:none;' class='easyui-linkbutton' href='details.html?id="+json.data[i]._id+"'>报名</a></div></div>";
+											}
+											items.innerHTML = str;
+									 }else{
+										 alert("暂无活动");
+										 }
+							   
+							  }
+					  }
+				});
+				
+			
+			}
+	   
+	   function addAllgroup(){
+		   
+		     	var items = document.getElementById("allrungroup");
+				
+				var str = "<div style='text-align:center; background-image:url(./images/bmimg.jpg); background-size:cover; height:250px;'>"
+				        +"<div style='color:#FFF; padding-top:50px;'><h1>观山湖约跑LSD活动</h1></div>"
+						 +"<div style='background-image:url(./images/btnbg.png); margin:0 auto; background-repeat: no-repeat; width:100px; height:35px; line-height:35px; font-size:18px; color:#FFF;'><a style='color:#FFF;text-decoration:none;' class='easyui-linkbutton' href='details.html'>报名</a></div></div>";
+				 
+				 str+="<div style='text-align:center; background-image:url(./images/bmimg.jpg); background-size:cover; height:250px;'>"
+				        +"<div style='color:#FFF; padding-top:50px;'><h1>观山湖约跑LSD活动</h1></div>"
+						 +"<div style='background-image:url(./images/btnbg.png); margin:0 auto; background-repeat: no-repeat; width:100px; height:35px; line-height:35px; font-size:18px; color:#FFF;'><a style='color:#FFF;text-decoration:none;' class='easyui-linkbutton' href='details.html'>报名</a></div></div>";
+				 
+				items.innerHTML = str;
+		   }
+    </script>
+</head>
+<body>
+    <div class="easyui-navpanel" style="position:relative;" id="cot">
+        
+        <div class="easyui-tabs" data-options="fit:true,border:false,justified:true,tabWidth:80,tabHeight:35"
+            style="background-color: #1E2126;">
+            <div title="我的跑团" id="myrungroup">
+         
+          
+            </div>
+            
+            <div title="所有跑团" id="allrungroup">
+     
+            </div>
+        </div>
+           <footer style="border:0 none; background-color:#2B2E32;">
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%; background-color:#2B2E32;" id="myfoot">
+                <a style="text-decoration:none; background-color: #1D1F25;" href="index.html" class="easyui-linkbutton" data-options="iconAlign:'top',plain:true"><img src="./images/bt2.png" style="height:4em; border:0 none;" /></a>
+                <a style="text-decoration:none" href="list.html" class="easyui-linkbutton" data-options="iconAlign:'top',plain:true"><img src="./images/bt3.png" style="height:4em;  border:0 none;" /></a>
+                <a style="text-decoration:none" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconAlign:'top',plain:true"><img src="./images/bt4.png" style="height:4em;  border:0 none;" /></a>
+                <a style="text-decoration:none" href="login.html" class="easyui-linkbutton" data-options="iconAlign:'top',plain:true"><img src="./images/bt1.png" style="height:4em;  border:0 none;" /></a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

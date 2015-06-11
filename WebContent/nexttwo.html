@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/general.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.4.5.min.js" type="text/javascript"></script> 
+<title>跑团</title>
+<script>
+    var paramUrl = $.mobile.path.parseUrl(location.search); 
+    var params = getUrlParam(decodeURIComponent(paramUrl.search));
+	var money;
+	var realname;
+	$(document).on("pageshow","#orderShow",function(){ // 当进入页面时
+         $.ajax({    
+           url:'../orders/'+params["orderid"],  
+           type:"GET",              
+           success:function(json){ 
+		    var str = JSON.stringify(json); 
+
+          if(json.data){ 
+		  realname = json.data.realName;
+			var str ="<li><b>报名订单号：</b>"+json.data.orderNum+"</li>"
+			              +"<li><b>真实姓名：</b>"+json.data.realName+"</li>"
+                         +"<li><b>网名：</b>"+json.data.nikeName+"</li>"
+                           +"<li><b>手机号码：</b>"+json.data.tel+"</li>"
+                            +"<li><b>出生年月：</b>"+datereturn(json.data.birthday)+"</li>"
+                            +" <li><b>身份证号：</b>"+json.data.cardID+"</li>"
+                              +"<li><b>参赛项目：</b>"+json.data.eventNum.eventName+"</li>"
+                              +"<li><b>紧急联系人姓名：</b>"+json.data.emergencyContactPerson+"</li>"
+                              +"<li><b>紧急联系人电话：</b>"+json.data.emergencyTel+"</li>";  
+	
+              $("#listOne").append(str).listview('refresh'); 
+			  
+			     var strtwo = "<li style='font-size:18px; text-align:center'>报名费:¥"+json.data.eventNum.registrationFees+"元</li>";
+				 money=json.data.eventNum.registrationFees;
+				  $("#listTwo").append(strtwo).listview('refresh'); 
+			  }	 
+           }
+        }); 
+  });
+  
+  
+  function pay(){
+	    $.ajax({    
+           url:'../orders/wpay',   //localhost:3000/orders/hsdifosakfdslkfadsj
+           type:"POST",
+		   data:{
+			   ip:"192.168.31.77",
+			   orderNum:params["orderid"]
+			   },              
+           success:function(json){ 
+		    var str = JSON.stringify(json); 
+			if(json.code==401){
+				   alert(json.msg);
+				}else{
+              window.location.href = "nextthree.html?name="+realname+"&moneyshow="+money+"&orderid="+params["orderid"]+"&url="+json.data;
+				}
+           }
+        }); 
+	  
+	  }
+  
+  function datereturn(str){
+    var str1 = str.substring(0,10); 
+     return str1;
+	  }
+</script>
+</head>
+
+
+<body>
+
+<div data-role="page" id="orderShow">
+  <div data-role="header">
+  <a href="nextone.html" data-icon="arrow-l" rel="external">返回</a> 
+  <h1>民间马拉松报名</h1>
+  </div>
+
+  <div data-role="content">
+
+
+     <ul data-role="listview" id="listOne" data-inset="true" style="font-size:14px;">
+                        
+          </ul>
+          
+            <ul data-role="listview" id="listTwo" data-inset="true">
+              
+            </ul>
+  </div>
+  
+   <div data-role="footer" data-position="fixed" style="text-align:center">
+      <a href="" onClick="pay()" style="width:150px; background-color:#0C6; color:#fff;" data-icon="arrow-r" data-iconpos="right" rel="external">确认信息</a>
+    </div>
+</div>
+
+</body>
+</html>

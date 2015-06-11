@@ -1,0 +1,715 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>跑团登录</title>
+    <link rel="stylesheet" type="text/css" href="css/themes/metro/easyui.css">
+    <link rel="stylesheet" type="text/css" href="css/themes/mobile.css">
+    <link rel="stylesheet" type="text/css" href="css/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="css/themes/icon.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easyui.mobile.js"></script>
+    <script type="text/javascript" src="js/myscript.js"></script>
+    <!--样式-->
+    <style type="text/css">
+        #cot
+        {
+            background-color: #2B2E33;
+        }
+        .tabs-title
+        {
+            color: #4E545E;
+            font-size: 2em;
+        }
+        .datagrid-body
+        {
+            background-color: #2B2E33;
+        }
+        .datalist .datagrid-btable a
+        {
+            color: #ffffff;
+            font-size: 1.5em;
+        }
+        .datagrid-row, .datagrid-header-row
+        {
+            background-color: #2B2E33;
+        }
+        .dsp
+        {
+            float: right;
+        }
+        .datalist .datagrid-cell, .m-list li
+        {
+            width: 100%;
+            padding-left: 0px;
+        }
+        .datalist-link::after, .m-list li > a::after
+        {
+            position: inherit;
+        }
+        .dmlink a::after
+        {
+            position: absolute;
+        }
+        .datalist-lines .datagrid-row td
+        {
+            border-bottom-color: #7A7A7A;
+        }
+        .l-btn-outline
+        {
+            border-style: none;
+        }
+        .panel-header
+        {
+            background-color: #2B2E33;
+        }
+        .panel-header, .panel-body
+        {
+            border-color: #2B2E33;
+        }
+        .ipct
+        {
+            background-color: #2B2E33;
+            border-style: none;
+            color: #ffffff;
+        }
+        .dactlist
+        {
+            border-bottom-style: solid;
+            border-bottom-color: #7A7A7A;
+            border-bottom-width: 1px;
+            height: 2.5em;
+            padding-top: 1em;
+            background-color: #2B2E33;
+        }
+        .dactlist a
+        {
+            color: #ffffff;
+            font-size: 1.5em;
+        }
+        .dactlist a::after
+        {
+            position: absolute;
+        }
+    </style>
+    <script type="text/javascript">
+        var actid = "";
+        var acttype = "";
+        function errorReceive(errinfo) {
+            alert(errinfo);
+        }
+        /********个人资料********/
+        function getMyfile() {
+            //            $.ajax({
+            //                type: "get",
+            //                dataType: "json",
+            //                url: "http://192.168.31.162:3000/users/5566b0662fa235ab0d4d8419",
+            //                success: function (data, status) {
+            //                    $("#spnick").val(data.nickName);
+            //                    $("#spsex").html(data.sex);
+            //                    $("#spheigth").val(data.height);
+            //                    $("#spweigth").val(data.weight);
+            //                    $("#spbirthday").html(data.birthday.substring(0, 10));
+            //                    $("#spaddress").val(data.location);
+            //                },
+            //                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            //                }
+            //            });
+            ajaxRequest("http://192.168.31.162:3000/users/5566b0662fa235ab0d4d8419", "get", fillmydata, errorReceive, null, "json");
+        }
+        //填充个人资料信息
+        function fillmydata(data) {
+            $("#spnick").val(data.nickName);
+            $("#spsex").html(data.sex);
+            $("#spheigth").val(data.height);
+            $("#spweigth").val(data.weight);
+            $("#spbirthday").html(data.birthday.substring(0, 10));
+            $("#spaddress").val(data.location);
+        }
+        function clksex() {
+            $('#dlgsex').dialog('close');
+            $('#spsex').html($('#cmbsex').combobox('getText'))
+        }
+        function clkbirthday() {
+            $('#dlgbirthday').dialog('close');
+            $('#spbirthday').html($('#dtbirthday').datebox('getValue'))
+        }
+        function clkpt() {
+            $('#dlgpt').dialog('close');
+            $('#sppt').html($('#cmbpt').combobox('getText'))
+        }
+        function clksaveMyfile() {
+            var strprm = "";
+            var nick = $("#spnick").val();
+            var sex = $("#spsex").html();
+            var heg = $("#spheigth").val();
+            var weg = $("#spweigth").val();
+            var bid = $("#spbirthday").html();
+            var address = $("#spaddress").val();
+            var team = $("#sppt").html();
+            //strprm = "nickName=" + nick + "&sex=" + sex + "&height=" + heg + "&weight=" + weg + "&birthday=" + $('#dtbirthday').datebox('getValue') + "&location=" + address + "&belongTeam=5566b0662fa235ab0d4d8419";
+
+            $.ajax({
+                type: "put",
+                dataType: "json",
+                url: "http://192.168.31.162:3000/users/5566b0662fa235ab0d4d8419",
+                data: { nickName: nick, sex: sex, height: heg, weight: weg, birthday: $('#dtbirthday').datebox('getValue'), location: address, belongTeam: "5566b0662fa235ab0d4d8419"
+                },
+                success: function (data, status) {
+                    if (data.code == 200) {
+                        alert("保存成功！");
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+        /********个人资料********/
+
+        /********修改密码********/
+        function clksavepwd() {
+            var ypwd = $("#lastpwd").val();
+            var npwd = $("#newpwd").val();
+            var qpwd = $("#qpwd").val();
+            if (ypwd == "" || npwd == "" || qpwd == "") {
+                alert("请输入密码信息！");
+                return;
+            }
+            if (npwd != qpwd) {
+                alert("输入密码不一致！");
+                return;
+            }
+            $.ajax({
+                type: "put",
+                dataType: "json",
+                url: "http://192.168.31.162:3000/users/5571235bc949d6e714a5f08b",
+                data: { pwd: ypwd, newPwd: npwd
+                },
+                success: function (data, status) {
+                    if (data.code == 200) {
+                        alert("保存成功！");
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+        /********修改密码********/
+
+        /********添加活动********/
+        function clksaveactive() {
+            var title = $("#title").val();
+            var setime = $("#setime").datetimebox("getValue");
+            var setaddress = $("#setaddress").val();
+            var linkman = $("#linkman").val();
+            var linktel = $("#linktel").val();
+            var signstartime = $("#signstartime").datetimebox("getValue");
+            var signendtime = $("#signendtime").datetimebox("getValue");
+            var content = $("#content").val();
+
+            var dataurl;
+            if (type == "1") {
+                dataurl = "http://192.168.31.162:3000/activitys/";
+                $("#title").textbox('setValue', "");
+                $("#setime").datetimebox("setValue", getCurrentTime());
+                $("#setaddress").textbox('setValue', "");
+                $("#linkman").textbox('setValue', "");
+                $("#linktel").textbox('setValue', "");
+                $("#signstartime").datetimebox("setValue", getCurrentTime());
+                $("#signendtime").datetimebox("setValue", getCurrentTime());
+                $("#content").textbox('setValue', "");
+            }
+            if (type == "2") {
+                dataurl = "http://192.168.31.162:3000/activitys/" + actid;
+            }
+
+            if (title == "") {
+                alert("请输入活动标题！");
+                return;
+            }
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: dataurl,
+                data: { title: title, collectiveTime: setime, venue: setaddress, linkman: linkman, linkTel: linktel, enrollmentsTime: signstartime, enrollmenteTime: signendtime, content: content },
+                success: function (data, status) {
+                    if (data.code == 200) {
+                        alert("保存成功！");
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+        /********添加活动********/
+
+        /********活动列表********/
+        function getActList() {
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: "http://192.168.31.162:3000/activitys",
+                success: function (data, status) {
+                    if (data.code == 200) {
+                        var datalist = data.data;
+                        var strlist = "";
+                        for (var i = 0; i < datalist.length; i++) {
+                            strlist += "<div class='dactlist'><a class='datalist-link' href='#pgactdetail' onclick=\"getActiveById('" + datalist[i]._id + "')\">";
+                            strlist += "<span style='float: left;'>" + datalist[i].title + "</span><span style='float: right;'>" + datetimeFormat(datalist[i].collectiveTime) + "</span></a></div>";
+                        }
+                        $("#actdetaillist").html(strlist);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+        /********活动列表********/
+
+        /********活动详情********/
+        function getActiveById(id) {
+            actid = id;
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: "http://192.168.31.162:3000/activitys/" + id,
+                success: function (data, status) {
+                    $("#dtitle").textbox('setValue', data.title);
+                    $("#dsetime").datetimebox("setValue", datetimeFormat(data.collectiveTime));
+                    $("#dsetaddress").textbox('setValue', data.venue);
+                    $("#dlinkman").textbox('setValue', data.linkman);
+                    $("#dlinktel").textbox('setValue', data.linkTel);
+                    $("#dsignstartime").datetimebox("setValue", datetimeFormat(data.enrollmentsTime));
+                    $("#dsignendtime").datetimebox("setValue", datetimeFormat(data.enrollmenteTime));
+                    $("#dcontent").textbox('setValue', data.content);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+
+        }
+        /********活动详情********/
+
+        $(function () {
+            //$.mobile.go("#pgeditmyfile");
+        })
+        function datetimeFormat(dstr) {
+            var strdate = dstr.substring(0, 10);
+            var strtime = dstr.substring(12, 19);
+            return strdate + " " + strtime;
+        }
+        function addact() {
+            acttype = "1";
+        }
+        function editact() {
+            acttype = "2";
+            //获取信息
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: "http://192.168.31.162:3000/activitys/" + actid,
+                success: function (data, status) {
+                    $("#title").textbox('setValue', data.title);
+                    $("#setime").datetimebox("setValue", datetimeFormat(data.collectiveTime));
+                    $("#setaddress").textbox('setValue', data.venue);
+                    $("#linkman").textbox('setValue', data.linkman);
+                    $("#linktel").textbox('setValue', data.linkTel);
+                    $("#signstartime").datetimebox("setValue", datetimeFormat(data.enrollmentsTime));
+                    $("#signendtime").datetimebox("setValue", datetimeFormat(data.enrollmenteTime));
+                    $("#content").textbox('setValue', data.content);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest);
+                }
+            });
+        }
+        function publishactive() {
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "http://192.168.31.162:3000/activitys/publishActivity/" + actid,
+                success: function (data, status) {
+                    if (data.code == 200) {
+                        alert("发布成功！");
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+        function getCurrentTime() {
+            var myDate = new Date();
+            //            myDate.getYear();        //获取当前年份(2位)
+            //            myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+            //            myDate.getMonth();       //获取当前月份(0-11,0代表1月)
+            //            myDate.getDate();        //获取当前日(1-31)
+            //            myDate.getDay();         //获取当前星期X(0-6,0代表星期天)
+            //            myDate.getTime();        //获取当前时间(从1970.1.1开始的毫秒数)
+            //            myDate.getHours();       //获取当前小时数(0-23)
+            //            myDate.getMinutes();     //获取当前分钟数(0-59)
+            //            myDate.getSeconds();     //获取当前秒数(0-59)
+            //            myDate.getMilliseconds();    //获取当前毫秒数(0-999)
+            //            myDate.toLocaleDateString();     //获取当前日期
+            //            var mytime = myDate.toLocaleTimeString();     //获取当前时间
+            return myDate.toLocaleString();        //获取日期与时间
+        }
+    </script>
+</head>
+<body>
+    <div class="easyui-navpanel cot" style="position: relative; width: 100%;" id="mypage">
+        <header>
+        <div class="m-toolbar" style="background-color: #1E2126; width: 100%; color: #ffffff;">
+            <div class="m-title">
+                我的信息</div>
+            <div class="m-left">
+                <a href="#" class="easyui-linkbutton m-back" data-options="plain:true,outline:true,back:true">
+                </a>
+            </div>
+        </div>
+        </header>
+        <div style="background-color: #2B2E33;">
+            <div style="text-align: center;">
+                <img src="images/logo.gif" style="border-radius: 110px; border-style: solid; border-width: 1px;" /></div>
+            <div style="text-align: center; color: #ffffff;">
+                测试昵称</div>
+        </div>
+        <ul class="easyui-datalist" data-options="fit: true,justified:true,lines: true,border: false"
+            style="color: #ffffff; background-color: #2B2E33;">
+            <li>
+                <div style="" class="dmlink">
+                    <a class="datalist-link" href="#pgeditmyfile" onclick="getMyfile()">编辑个人资料</a></div>
+            </li>
+            <li>
+                <div style="" class="dmlink">
+                    <a class="datalist-link" href="#pgeditpwd">修改密码</a></div>
+            </li>
+            <li>
+                <div style="" class="dmlink">
+                    <a class="datalist-link" href="#pgpubactives" onclick="addact()">添加活动</a></div>
+            </li>
+            <li>
+                <div style="" class="dmlink">
+                    <a class="datalist-link" href="#actlist" onclick="getActList()">活动列表</a></div>
+            </li>
+        </ul>
+        <footer>
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%; background-color:#2B2E33;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-act.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-jlb.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-cen.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-od.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-my.png" style="max-height:4em;" /></a>
+            </div>
+        </footer>
+    </div>
+    <!--修改个人信息-->
+    <div class="easyui-navpanel cot" style="position: relative; width: 100%;" id="pgeditmyfile">
+        <header>
+        <div class="m-toolbar" style="background-color: #1E2126; width: 100%; color: #ffffff;">
+            <div class="m-title">
+                编辑资料</div>
+            <div class="m-left">
+                <a href="#" class="easyui-linkbutton m-back" data-options="plain:true,outline:true,back:true">
+                </a>
+            </div>
+            <div class="m-right">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" plain="true"
+                    outline="true" onclick="clksaveMyfile()">保存</a>
+            </div>
+        </div>
+        </header>
+        <ul class="easyui-datalist" data-options="fit: true,justified:true,lines: true,border: false"
+            style="color: #ffffff; background-color: #2B2E33;">
+            <li style="height: 5em;">
+                <div style="background-color: #1E2126; margin-top: 1em; height: 3em;">
+                    <a class="datalist-link">头像</a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;">
+                    <a class="datalist-link">昵称<input type="text" class="dsp ipct" id="spnick" /></a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;" id="dsex" class="dmlink">
+                    <a class="datalist-link" onclick="$('#dlgsex').dialog('open').dialog('center')">性别<span
+                        class="dsp" id="spsex"></span></a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;">
+                    <a class="datalist-link">身高(cm)<input type="text" class="dsp ipct" id="spheigth" /></a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;">
+                    <a class="datalist-link">体重(kg)<input type="text" class="dsp ipct" id="spweigth" /></a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;" class="dmlink">
+                    <a class="datalist-link" onclick="$('#dlgbirthday').dialog('open').dialog('center')">
+                        生日<span class="dsp" id="spbirthday"></span></a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;" class="dmlink">
+                    <a class="datalist-link">所在地<input type="text" class="dsp ipct" id="spaddress" /></a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;" id="dteam" class="dmlink">
+                    <a class="datalist-link" onclick="$('#dlgpt').dialog('open').dialog('center')">所属跑团<span
+                        class="dsp" id="sppt"></span></a></div>
+            </li>
+        </ul>
+        <!--开始弹出层-->
+        <div id="dlgsex" class="easyui-dialog" style="padding: 20px 6px; width: 80%;" data-options="inline:true,modal:true,closed:true,title:'选择性别'">
+            <select class="easyui-combobox" style="width: 100%;" editable="false" id="cmbsex">
+                <option value="0">男</option>
+                <option value="1">女</option>
+            </select>
+            <div class="dialog-button">
+                <a href="javascript:void(0)" class="easyui-linkbutton" style="width: 100%; height: 30em"
+                    onclick="clksex()">确定</a>
+            </div>
+        </div>
+        <div id="dlgbirthday" class="easyui-dialog" style="padding: 20px 6px; width: 80%;"
+            data-options="inline:true,modal:true,closed:true,title:'选择生日'">
+            <input class="easyui-datebox" prompt="Birthday" data-options="editable:false,panelWidth:220,panelHeight:240,iconWidth:30"
+                style="width: 100%" id="dtbirthday">
+            <div class="dialog-button">
+                <a href="javascript:void(0)" class="easyui-linkbutton" style="width: 100%; height: 30em"
+                    onclick="clkbirthday()">确定</a>
+            </div>
+        </div>
+        <div id="dlgpt" class="easyui-dialog" style="padding: 20px 6px; width: 80%;" data-options="inline:true,modal:true,closed:true,title:'选择跑团'">
+            <select class="easyui-combobox" style="width: 100%;" editable="false" id="cmbpt">
+                <option value="0">跑团1</option>
+                <option value="1">跑团2</option>
+            </select>
+            <div class="dialog-button">
+                <a href="javascript:void(0)" class="easyui-linkbutton" style="width: 100%; height: 30em"
+                    onclick="clkpt()">确定</a>
+            </div>
+        </div>
+        <!--结束弹出层-->
+        <footer>
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%; background-color:#2B2E33;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-act.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-jlb.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-cen.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-od.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-my.png" style="max-height:4em;" /></a>
+            </div>
+        </footer>
+    </div>
+    <!--结束修改个人信息-->
+    <!--修改密码-->
+    <div class="easyui-navpanel cot" style="position: relative; width: 100%;" id="pgeditpwd">
+        <header>
+        <div class="m-toolbar" style="background-color: #1E2126; width: 100%; color: #ffffff;">
+            <div class="m-title">
+                修改密码</div>
+            <div class="m-left">
+                <a href="#" class="easyui-linkbutton m-back" data-options="plain:true,outline:true,back:true">
+                </a>
+            </div>
+            <div class="m-right">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" plain="true"
+                    outline="true" onclick="clksavepwd()">保存</a>
+            </div>
+        </div>
+        </header>
+        <ul class="easyui-datalist" data-options="fit: true,lines: true,border: false" style="color: #ffffff;
+            background-color: #2B2E33;">
+            <li>
+                <div style="background-color: #1E2126;">
+                    <a class="datalist-link">原始密码<input type="password" class="dsp ipct" id="lastpwd" /></a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;">
+                    <a class="datalist-link">新密码<input type="password" class="dsp ipct" id="newpwd" /></a></div>
+            </li>
+            <li>
+                <div style="background-color: #1E2126;">
+                    <a class="datalist-link">确认密码<input type="password" class="dsp ipct" id="qpwd" /></a></div>
+            </li>
+        </ul>
+        <footer>
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%; background-color:#2B2E33;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-act.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-jlb.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-cen.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-od.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-my.png" style="max-height:4em;" /></a>
+            </div>
+        </footer>
+    </div>
+    <!--结束修改密码-->
+    <!--添加活动-->
+    <div class="easyui-navpanel cot" style="position: relative; width: 100%;" id="pgpubactives">
+        <header>
+        <div class="m-toolbar" style="background-color: #1E2126; width: 100%; color: #ffffff;">
+            <div class="m-title">
+                发布活动</div>
+            <div class="m-left">
+                <a href="#" class="easyui-linkbutton m-back" data-options="plain:true,outline:true,back:true">
+                </a>
+            </div>
+            <div class="m-right">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-ok" plain="true"
+                    outline="true" onclick="clksaveactive()">保存</a>
+            </div>
+        </div>
+        </header>
+        <div style="height: 100%; width: 100%; background-color: #2B2E33; color: #ffffff;">
+            <div>
+                <span>活动标题</span>
+                <input type="text" class="easyui-textbox" style="width: 80%;" id="title" />
+            </div>
+            <div style="margin-top: 2em;">
+                <span>集合时间</span>
+                <input class="easyui-datetimebox" prompt="集合时间" data-options="editable:false,panelWidth:220,panelHeight:240,iconWidth:30"
+                    style="width: 80%" id="setime">
+            </div>
+            <div style="margin-top: 2em;">
+                <span>集合地点</span>
+                <input type="text" class="easyui-textbox" style="width: 80%;" id="setaddress" />
+            </div>
+            <div style="margin-top: 2em;">
+                <span>联 系 人</span>
+                <input type="text" class="easyui-textbox" style="width: 80%;" id="linkman" />
+            </div>
+            <div style="margin-top: 2em;">
+                <span>联系电话</span>
+                <input type="text" class="easyui-textbox" style="width: 80%;" id="linktel" />
+            </div>
+            <div style="margin-top: 2em;">
+                <span>报名时间</span>
+                <input class="easyui-datetimebox" prompt="开始时间" data-options="editable:false,panelWidth:220,panelHeight:240,iconWidth:30"
+                    style="width: 39%" id="signstartime">至<input class="easyui-datetimebox" prompt="截止时间"
+                        data-options="editable:false,panelWidth:220,panelHeight:240,iconWidth:30" style="width: 38%"
+                        id="signendtime">
+            </div>
+            <div style="margin-top: 2em;">
+                <span>活动详情</span>
+                <input type="text" class="easyui-textbox" data-options="multiline:true" style="width: 80%;
+                    height: 150em;" id="content" />
+            </div>
+        </div>
+        <footer>
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%; background-color:#2B2E33;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-act.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-jlb.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-cen.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-od.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-my.png" style="max-height:4em;" /></a>
+            </div>
+        </footer>
+    </div>
+    <!--结束添加活动-->
+    <!--活动列表-->
+    <div class="easyui-navpanel cot" style="position: relative; width: 100%;" id="actlist">
+        <header>
+        <div class="m-toolbar" style="background-color: #1E2126; width: 100%; color: #ffffff;">
+            <div class="m-title">
+                活动列表</div>
+            <div class="m-left">
+                <a href="#" class="easyui-linkbutton m-back" data-options="plain:true,outline:true,back:true">
+                </a>
+            </div>
+        </div>
+        </header>
+        <div id="actdetaillist" style="background-color: #2B2E33; height: 100%;">
+        </div>
+        <!--        <ul class="easyui-datalist" data-options="fit: true,justified:true,lines: true,border: false"
+            style="color: #ffffff; background-color: #2B2E33;" id="actdetaillist">
+            <li>
+                <div style="" class="dmlink">
+                    <a class="datalist-link" href="#pgactdetail" onclick="getActiveById('actlist1')">
+                        <input id="actlist1" type="hidden" value="ss" /><span style="float: left;">活动标题</span><span
+                            style="float: right;">2015-02-01</span></a></div>
+            </li>
+        </ul>-->
+    </div>
+    <!--结束活动列表-->
+    <!--活动详情-->
+    <div class="easyui-navpanel cot" style="position: relative; width: 100%;" id="pgactdetail">
+        <header>
+        <div class="m-toolbar" style="background-color: #1E2126; width: 100%; color: #ffffff;">
+            <div class="m-title">
+                发布活动</div>
+            <div class="m-left">
+                <a href="#" class="easyui-linkbutton m-back" data-options="plain:true,outline:true,back:true">
+                </a>
+            </div>
+        </div>
+        </header>
+        <div style="height: 100%; width: 100%; background-color: #2B2E33; color: #ffffff;">
+            <div>
+                <span>活动标题</span>
+                <input type="text" class="easyui-textbox" style="width: 80%;" id="dtitle" disabled="true" />
+            </div>
+            <div style="margin-top: 2em;">
+                <span>集合时间</span>
+                <input class="easyui-datetimebox" prompt="集合时间" data-options="editable:false,panelWidth:220,panelHeight:240,iconWidth:30"
+                    style="width: 80%" id="dsetime" disabled="true">
+            </div>
+            <div style="margin-top: 2em;">
+                <span>集合地点</span>
+                <input type="text" class="easyui-textbox" style="width: 80%;" id="dsetaddress" disabled="true" />
+            </div>
+            <div style="margin-top: 2em;">
+                <span>联 系 人</span>
+                <input type="text" class="easyui-textbox" style="width: 80%;" id="dlinkman" disabled="true" />
+            </div>
+            <div style="margin-top: 2em;">
+                <span>联系电话</span>
+                <input type="text" class="easyui-textbox" style="width: 80%;" id="dlinktel" disabled="true" />
+            </div>
+            <div style="margin-top: 2em;">
+                <span>报名时间</span>
+                <input class="easyui-datetimebox" prompt="开始时间" data-options="editable:false,panelWidth:220,panelHeight:240,iconWidth:30"
+                    disabled="true" style="width: 39%" id="dsignstartime">至<input class="easyui-datetimebox"
+                        prompt="截止时间" data-options="editable:false,panelWidth:220,panelHeight:240,iconWidth:30"
+                        disabled="true" style="width: 38%" id="dsignendtime">
+            </div>
+            <div style="margin-top: 2em;">
+                <span>活动详情</span>
+                <input type="text" class="easyui-textbox" disabled="true" data-options="multiline:true"
+                    style="width: 80%; height: 150em;" id="dcontent" />
+            </div>
+            <div style="margin-top: 2em; text-align: center;">
+                <a href="#" class="easyui-linkbutton c6" style="width: 30%">发布</a><a href="#pgpubactives"
+                    class="easyui-linkbutton c6" style="width: 30%; margin-left: 2em;" onclick="editact()">修改</a>
+            </div>
+        </div>
+        <footer>
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%; background-color:#2B2E33;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-act.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-jlb.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-cen.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-od.png" style="max-height:4em;" /></a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="size:'large',iconAlign:'top',plain:true"><img src="images/foot-my.png" style="max-height:4em;" /></a>
+            </div>
+        </footer>
+    </div>
+    <!--结束活动详情-->
+</body>
+</html>

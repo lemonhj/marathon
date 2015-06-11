@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/general.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.4.5.min.js" type="text/javascript"></script> 
+<title>跑团</title>
+<script>
+   var paramUrl = $.mobile.path.parseUrl(location.search); 
+    var params = getUrlParam(decodeURIComponent(paramUrl.search));
+	var realname;
+   $(document).ready(function(e) {
+       if(params['pid']!=undefined){
+		   checkMegss(params['pid']);
+		   }
+   });
+
+   function checkMeg(){
+	   
+	    for(var i = 1;i<12;i++){
+			   $('#'+i).remove();
+			}
+	    showLoader();
+	 
+	 $.ajax({    
+           url:'../orders/cardIDs/'+formSerach.cardID.value,  
+           type:"GET",            
+           success:function(json){ 
+		    var str = JSON.stringify(json);
+			 
+		
+           if(json.data){ 
+		    realname=json.data.realName;
+			      var str ="<li id='1'><b>报名订单号：</b>"+json.data.orderNum+"</li>"
+			              +"<li id='2'><b>真实姓名：</b>"+json.data.realName+"</li>"
+                         +"<li id='3'><b>网名：</b>"+json.data.nikeName+"</li>"
+                           +"<li id='4'><b>手机号码：</b>"+json.data.tel+"</li>"
+                            +"<li id='5'><b>出生年月：</b>"+datereturn(json.data.birthday)+"</li>"
+                            +" <li id='6'><b>身份证号：</b>"+json.data.cardID+"</li>"
+                              +"<li id='7'><b>参赛项目：</b>"+json.data.eventNum.eventName+"</li>"
+                              +"<li id='8'><b>紧急联系人姓名：</b>"+json.data.emergencyContactPerson+"</li>"
+                              +"<li id='9'><b>紧急联系人电话：</b>"+json.data.emergencyTel+"</li>";  
+	
+              $("#listOne").append(str).listview('refresh'); 
+			     if(json.data.orderStatus){
+			     var strtwo = "<li id='10' style='font-size:18px; text-align:center'>报名费:¥"+json.data.eventNum.registrationFees+"元<font color=green>（已支付完成）</font></li>"
+				 +"<li id='11'><b>您的参赛号：0</b>"+json.data.athleteNum+"</li>";		 
+				  $("#listTwo").append(strtwo).listview('refresh'); 
+				  }else{
+					 var strtwo = "<li id='10' style='font-size:18px; text-align:center'>报名费:¥"+json.data.eventNum.registrationFees+"元<a onclick='pay("+json.data.orderNum+","+json.data.eventNum.registrationFees+")' style='color:red;'>(未支付，现在去支付)</a></li>";
+				  $("#listTwo").append(strtwo).listview('refresh');  
+					  }
+			var node = document.getElementById("showMeg");
+		  
+		    node.style.display = ""; 
+			  }	else{
+				  var str ="<li id='1'><b>此身份证号未报名！</b></li>";
+				   $("#listOne").append(str).listview('refresh'); 
+				  }
+			  hideLoader(); 
+
+           },error:function(a,b,c){ 
+		        alert("网络链接失败");    
+				  hideLoader(); 
+			   }
+        }); 
+
+	   }
+	   
+	   function pay(num,money){
+	    $.ajax({    
+           url:'../orders/wpay',   //localhost:3000/orders/hsdifosakfdslkfadsj
+           type:"POST",
+		   data:{
+			   ip:"192.168.31.77",
+			   orderNum:num
+			   },              
+           success:function(json){ 
+		    var str = JSON.stringify(json); 
+			 if(json.code==401){
+				  alert(json.msg);
+			}else{
+              window.location.href = "nextthree.html?name="+realname+"&moneyshow="+money+"&orderid="+num+"&url="+json.data;
+			  }
+
+           }
+        }); 
+	  
+	  }
+	  
+	  function checkMegss(cardid){
+	   
+	    for(var i = 1;i<12;i++){
+			   $('#'+i).remove();
+			}
+	    showLoader();
+	 
+	 $.ajax({    
+           url:'../orders/cardIDs/'+cardid,  
+           type:"GET",            
+           success:function(json){ 
+		    var str = JSON.stringify(json);
+			 
+		
+           if(json.data){ 
+			      var str ="<li id='1'><b>报名订单号：</b>"+json.data.orderNum+"</li>"
+			              +"<li id='2'><b>真实姓名：</b>"+json.data.realName+"</li>"
+                         +"<li id='3'><b>地平线跑团网名：</b>"+json.data.nikeName+"</li>"
+                           +"<li id='4'><b>手机号码：</b>"+json.data.tel+"</li>"
+                            +"<li id='5'><b>出生年月：</b>"+datereturn(json.data.birthday)+"</li>"
+                            +" <li id='6'><b>身份证号：</b>"+json.data.cardID+"</li>"
+                              +"<li id='7'><b>参赛项目：</b>"+json.data.eventNum.eventName+"</li>"
+                              +"<li id='8'><b>紧急联系人姓名：</b>"+json.data.emergencyContactPerson+"</li>"
+                              +"<li id='9'><b>紧急联系人电话：</b>"+json.data.emergencyTel+"</li>";  
+	
+              $("#listOne").append(str).listview('refresh'); 
+			     if(json.data.orderStatus){
+			     var strtwo = "<li id='10' style='font-size:18px; text-align:center'>报名费:¥"+json.data.eventNum.registrationFees+"元<font color=green>（已支付完成）</font></li>"
+				 +"<li id='11'><b>您的参赛号：0</b>"+json.data.athleteNum+"</li>";		 
+				  $("#listTwo").append(strtwo).listview('refresh'); 
+				  }else{
+					 var strtwo = "<li id='10' style='font-size:18px; text-align:center'>报名费:¥"+json.data.eventNum.registrationFees+"元<a onclick='pay("+json.data.orderNum+","+json.data.eventNum.registrationFees+")' style='color:red;'>(未支付，现在去支付)</a></li>";
+				  $("#listTwo").append(strtwo).listview('refresh');  
+					  }
+			var node = document.getElementById("showMeg");
+		  
+		    node.style.display = ""; 
+			  }	else{
+				  var str ="<li id='1'><b>报名订单号：</b>查无内容</li>";
+				   $("#listOne").append(str).listview('refresh'); 
+				  }
+			  hideLoader(); 
+
+           },error:function(a,b,c){     
+				  hideLoader(); 
+			   }
+        }); 
+
+	   }
+	   
+	   
+	     function datereturn(str){
+    var str1 = str.substring(0,10); 
+     return str1;
+	  }
+	  
+	  
+	   function showLoader() {  
+    $.mobile.loading('show', {  
+        text: '查询中...', //加载器中显示的文字  
+        textVisible: true, //是否显示文字  
+        theme: 'a',        //加载器主题样式a-e  
+        textonly: false,   //是否只显示文字  
+        html: ""           //要显示的html内容，如图片等  
+    });  
+}  
+  
+
+function hideLoader()  
+{  
+    //隐藏加载器  
+    $.mobile.loading('hide');  
+} 
+	
+</script>
+
+</head>
+
+<body>
+  
+<div data-role="page">
+  <div data-role="header">
+  <a href="index1.html" data-icon="arrow-l" rel="external">返回</a> 
+  <h1>报名查询</h1>
+  </div>
+
+  <div data-role="content">
+     <ul data-role="listview" id="contentListSecond" data-inset="true" style="font-size:14px;">
+            <script>
+var str = "请填写自己的身份证号码";
+			document.write("<li style='white-space:pre-wrap; width:"+($(window).width())+";'>"+str+"</li>");
+            </script>
+            
+          </ul>
+     <form method="post" name="formSerach">
+      <div data-role="fieldcontain">
+
+         <section style="padding-bottom:5px;">
+      <label for="cardID" class="ui-hidden-accessible">身份证号：</label>
+      <input type="text" name="cardID" id="cardID" placeholder="身份证号">
+         </section>
+         <section style="padding-bottom:5px;">
+           <a href="#" onClick="checkMeg()" data-role="button" data-corners="false">查询</a>
+          </section>
+      </div>
+    </form>
+        <div data-role="fieldcontain">
+           <div id="showMeg" style=" display:none; text-align:center;">
+           <ul data-role="listview" id="listOne" data-inset="true" style="font-size:14px;">
+                        
+           </ul>
+            <ul data-role="listview" id="listTwo" data-inset="true">
+              
+            </ul>
+            </div>
+        </div>
+  </div>
+  
+</div>
+</body>
+</html>
